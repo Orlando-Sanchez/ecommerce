@@ -7,3 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+user_types = %w[Owner Buyer Seller]
+
+user_types.each do |name|
+  UserType.find_or_create_by!(name: name)
+end
