@@ -5,6 +5,7 @@ RSpec.describe Product, type: :model do
 
   describe 'associations' do
     it { should belong_to(:store) }
+    it { should have_and_belong_to_many(:categories) }
   end
 
   describe 'validations' do
