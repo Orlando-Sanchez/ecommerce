@@ -5,6 +5,7 @@ RSpec.describe User, type: :model do
 
   describe 'associations' do
     it { should belong_to(:organization).optional }
+    it { should have_and_belong_to_many(:user_types) }
   end
 
   describe 'validations' do
