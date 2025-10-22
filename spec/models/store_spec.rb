@@ -1,7 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe Organization, type: :model do
-  subject(:organization) { build(:organization) }
+RSpec.describe Store, type: :model do
+  subject(:store) { build(:store) }
+
+  describe 'associations' do
+    it { should belong_to(:organization) }
+  end
 
   describe 'validations' do
     it { should validate_presence_of(:name) }
