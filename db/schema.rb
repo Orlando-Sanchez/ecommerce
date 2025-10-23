@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_10_22_225707) do
+ActiveRecord::Schema[8.0].define(version: 2025_10_23_000129) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -39,6 +39,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_225707) do
     t.bigint "category_id", null: false
     t.index ["category_id", "product_id"], name: "index_categories_products_on_category_id_and_product_id"
     t.index ["product_id", "category_id"], name: "index_categories_products_on_product_id_and_category_id", unique: true
+  end
+
+  create_table "invoices", force: :cascade do |t|
+    t.bigint "store_id", null: false
+    t.bigint "order_id", null: false
+    t.integer "status", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_invoices_on_order_id"
+    t.index ["store_id", "order_id"], name: "index_invoices_on_store_id_and_order_id", unique: true
+    t.index ["store_id"], name: "index_invoices_on_store_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -119,6 +130,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_10_22_225707) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "invoices", "orders"
+  add_foreign_key "invoices", "stores"
   add_foreign_key "orders", "stores"
   add_foreign_key "orders", "users"
   add_foreign_key "orders_products", "orders"
