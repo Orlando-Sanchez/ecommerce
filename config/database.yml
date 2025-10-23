@@ -4,7 +4,7 @@ default: &default
   host: <%= ENV.fetch("POSTGRES_HOST", "db") %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS", 5) %>
   username: <%= ENV.fetch("POSTGRES_USER", "postgres") %>
-  password: <%= ENV["POSTGRES_PASSWORD"] %>
+  password: <%= ENV.fetch("POSTGRES_PASSWORD", "postgres") %>
 
 development:
   <<: *default
