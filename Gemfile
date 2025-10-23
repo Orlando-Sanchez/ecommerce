@@ -21,7 +21,7 @@ gem "devise", "~> 4.9.4"
 
 gem "rails_best_practices"
 
-gem "reek", '~> 6.5.0'
+gem "reek", "~> 6.5.0"
 
 gem "activeadmin"
 
@@ -81,4 +81,5 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "shoulda-matchers", "~> 6.5.0"
 end
