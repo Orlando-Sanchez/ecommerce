@@ -21,7 +21,7 @@ gem "devise", "~> 4.9.4"
 
 gem "rails_best_practices"
 
-gem "reek", '~> 6.5.0'
+gem "reek", "~> 6.5.0"
 
 gem "activeadmin"
 

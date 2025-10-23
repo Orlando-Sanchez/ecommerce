@@ -11,7 +11,7 @@ RSpec.describe Order, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:status) }
   end
-  
+
   describe 'enum status' do
     it do
       should define_enum_for(:status)
