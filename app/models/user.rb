@@ -7,4 +7,8 @@ class User < ApplicationRecord
   has_and_belongs_to_many :user_types
 
   validates :email, presence: true, uniqueness: { case_sensitive: false }
+
+  def seller?
+    user_types.exists?(name: "Seller")
+  end
 end
