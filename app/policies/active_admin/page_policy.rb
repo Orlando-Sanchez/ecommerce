@@ -1,7 +1,7 @@
 module ActiveAdmin
   class PagePolicy < ::ApplicationPolicy
     def index?
-      user&.seller?
+      user&.seller? || false
     end
 
     def show?
