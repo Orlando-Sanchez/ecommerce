@@ -99,7 +99,7 @@ ActiveAdmin.setup do |config|
   # because, by default, user gets redirected to Dashboard. If user
   # doesn't have access to Dashboard, he'll end up in a redirect loop.
   # Method provided here should be defined in application_controller.rb.
-  # config.on_unauthorized_access = :access_denied
+  config.on_unauthorized_access = :access_denied
 
   # == Current User
   #
@@ -120,13 +120,13 @@ ActiveAdmin.setup do |config|
   # will call the method to return the path.
   #
   # Default:
-  config.logout_link_path = :destroy_admin_user_session_path
+  config.logout_link_path = :destroy_user_session_path
 
   # This setting changes the http method used when rendering the
   # link. For example :get, :delete, :put, etc..
   #
   # Default:
-  # config.logout_link_method = :get
+  config.logout_link_method = :delete
 
   # == Root
   #
@@ -141,7 +141,7 @@ ActiveAdmin.setup do |config|
   # This allows your users to comment on any resource registered with Active Admin.
   #
   # You can completely disable comments:
-  # config.comments = false
+  config.comments = false
   #
   # You can change the name under which comments are registered:
   # config.comments_registration_name = 'AdminComment'
@@ -351,12 +351,9 @@ ActiveAdmin.setup do |config|
   # config.use_webpacker = true
 
   # Use User model for authentication
-  config.authentication_method = :authenticate_user!  # Devise method for User model.
+  config.authentication_method = :authenticate_user!
   config.current_user_method = :current_user
 
   # Use Pundit for authorization
   config.authorization_adapter = ActiveAdmin::PunditAdapter
-
-  # Define action to use if user has no permission
-  config.on_unauthorized_access = :access_denied
 end

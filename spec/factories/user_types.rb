@@ -1,5 +1,13 @@
 FactoryBot.define do
   factory :user_type do
-    sequence(:name) { |n| "UserType#{n}" }
+    name { "Owner" }
+
+    trait :seller do
+      name { "Seller" }
+    end
+
+    trait :buyer do
+      name { "Buyer" }
+    end
   end
 end
