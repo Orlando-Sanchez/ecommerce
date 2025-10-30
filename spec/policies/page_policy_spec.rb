@@ -5,7 +5,7 @@ RSpec.describe ActiveAdmin::PagePolicy do
 
   context "when the user is a seller" do
     let(:seller_type) { create(:user_type, :seller) }
-    let(:user) { create(:user, user_types: [seller_type]) }
+    let(:user) { create(:user, user_types: [ seller_type ]) }
 
     it "grants access to the dashboard" do
       expect(policy.show?).to be true
@@ -14,7 +14,7 @@ RSpec.describe ActiveAdmin::PagePolicy do
 
   context "when the user is a buyer" do
     let(:buyer_type) { create(:user_type, :buyer) }
-    let(:user) { create(:user, user_types: [buyer_type]) }
+    let(:user) { create(:user, user_types: [ buyer_type ]) }
 
     it "denies access to the dashboard" do
       expect(policy.show?).to be false
