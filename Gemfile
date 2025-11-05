@@ -25,6 +25,8 @@ gem "reek", "~> 6.5.0"
 
 gem "activeadmin"
 
+gem "active_admin_theme"
+
 gem "pundit"
 
 gem "sprockets-rails"

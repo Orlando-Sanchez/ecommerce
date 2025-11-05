@@ -10,6 +10,40 @@
 // Active Admin's got SASS!
 @import "active_admin/mixins";
 @import "active_admin/base";
+@import 'wigu/active_admin_theme';
+
+// ----------------------------
+// Flash Messages
+// ----------------------------
+.flash {
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin: 10px 0;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #000000 !important;
+}
+
+.flash.alert {
+  background-color: #fcd34d;
+  border: 1px solid #fbbf24;
+}
+
+.flash.notice {
+  background-color: #34d399;
+  border: 1px solid #10b981;
+}
+
+.flash.error {
+  background-color: #f87171;
+  border: 1px solid #ef4444;
+}
+
+.flash.info {
+  background-color: #93c5fd;
+  border: 1px solid #3b82f6;
+}
 
 // Overriding any non-variable Sass must be done after the fact.
 // For example, to change the default status-tag color:
