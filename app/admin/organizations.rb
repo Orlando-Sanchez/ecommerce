@@ -30,7 +30,7 @@ ActiveAdmin.register Organization do
       authorize Organization
       if current_user.organization.present?
         redirect_to edit_admin_organization_path(current_user.organization),
-                    alert: "You already belong to an organization. You can only edit it."
+                    alert: "You already belong to an organization."
       else
         super
       end
@@ -41,7 +41,6 @@ ActiveAdmin.register Organization do
       authorize @organization
 
       if @organization.save
-        # Asociar la nueva org al usuario owner que la creó
         current_user.update!(organization: @organization)
         redirect_to edit_admin_organization_path(@organization),
                     notice: "Organization created correctly."
@@ -52,11 +51,18 @@ ActiveAdmin.register Organization do
 
     def edit
       @organization = Organization.find(params[:id])
-      if current_user.owner? && @organization.id != current_user.organization_id
-        redirect_to edit_admin_organization_path(current_user.organization),
-                    alert: "You can only edit your own organization."
+
+      if current_user.owner? && (@organization.id != current_user.organization_id)
+        if current_user.organization.present?
+          redirect_to edit_admin_organization_path(current_user.organization),
+                      alert: "You can only edit your own organization."
+        else
+          redirect_to admin_root_path,
+                      alert: "You are not associated with any organization yet."
+        end
         return
       end
+
       authorize @organization
       super
     end
@@ -102,7 +108,7 @@ ActiveAdmin.register Organization do
 
     f.actions do
       f.action :submit, label: "Save changes"
-      f.cancel_link admin_organization_path(resource)
+      f.cancel_link admin_root_path
     end
   end
 

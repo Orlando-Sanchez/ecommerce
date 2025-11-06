@@ -5,10 +5,24 @@ ActiveAdmin.register Store do
     include Pundit::Authorization
 
     def scoped_collection
-      policy_scope(super)
+      policy_scope(super).includes(:organization)
+    end
+
+    def index
+      if current_user.organization.nil?
+        redirect_to admin_root_path, alert: "There are no stores yet, please create your organization first."
+        return
+      end
+
+      super
     end
 
     def new
+      if current_user.owner? && current_user.organization.nil?
+        redirect_to admin_root_path, alert: "You must belong to an organization before creating a store."
+        return
+      end
+
       @store = Store.new
       authorize @store
       super
@@ -20,7 +34,7 @@ ActiveAdmin.register Store do
       authorize @store
 
       if @store.save
-        redirect_to edit_admin_store_path(@store), notice: "Store creada correctamente."
+        redirect_to admin_stores_path, notice: "Store created successfully."
       else
         render :new
       end
@@ -37,7 +51,7 @@ ActiveAdmin.register Store do
       authorize @store
 
       if @store.update(permitted_params[:store])
-        redirect_to edit_admin_store_path(@store), notice: "Store actualizada correctamente."
+        redirect_to admin_stores_path, notice: "Store updated successfully."
       else
         render :edit
       end
@@ -51,9 +65,8 @@ ActiveAdmin.register Store do
   end
 
   permit_params do
-    # Owners pueden editar name y description; sellers solo gestionan asignaciones si quieres
     if current_user.owner?
-      [:name, :description, seller_ids: []]
+      [:name, :description]
     else
       []
     end
@@ -62,19 +75,23 @@ ActiveAdmin.register Store do
   index do
     column :name
     column :description
-    column :organization
-    column "Sellers" do |store|
-      store.sellers.map(&:email).join(", ")
-    end
     actions
   end
 
   form do |f|
-    f.inputs "Detalles de la Store" do
-      f.input :name if current_user.owner?
-      f.input :description if current_user.owner?
-      f.input :sellers, as: :check_boxes, collection: User.where(user_type: "Seller") if current_user.owner?
+    f.inputs "Store details" do
+      if current_user.owner?
+        f.input :name
+        f.input :description
+      end
     end
     f.actions
+  end
+
+  show do
+    attributes_table do
+      row :name
+      row :description
+    end
   end
 end

@@ -31,11 +31,11 @@ class OrganizationPolicy < ApplicationPolicy
   end
 
   def new?
-    false
+    create?
   end
 
   def create?
-    false
+    user.owner? && user.organization.nil?
   end
 
   def destroy?

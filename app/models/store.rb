@@ -6,4 +6,12 @@ class Store < ApplicationRecord
 
   validates :name, presence: true
   validates :description, presence: true
+
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id name description organization_id created_at updated_at]
+  end
+
+  def self.ransackable_associations(auth_object = nil)
+    ["organization", "store_assignments", "sellers"]
+  end
 end

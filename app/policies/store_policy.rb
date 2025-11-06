@@ -4,15 +4,21 @@ class StorePolicy < ApplicationPolicy
   end
 
   def show?
-    user.owner? || (user.seller? && record.sellers.include?(user))
+    (user.owner? && record.organization == user.organization) ||
+    (user.seller? && record.sellers.include?(user))
   end
 
   def create?
     user.owner? && user.organization.present?
   end
 
+   def new?
+    create?
+  end
+
   def update?
-    user.owner? || (user.seller? && record.sellers.include?(user))
+    (user.owner? && record.organization == user.organization) ||
+    (user.seller? && record.sellers.include?(user))
   end
 
   def destroy?
