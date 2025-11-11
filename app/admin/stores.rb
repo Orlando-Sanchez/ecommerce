@@ -105,19 +105,20 @@ ActiveAdmin.register Store do
         column :quantity
         column :status
         column :description
+        column :categories do |product|
+          product.categories.pluck(:name).join(", ")
+        end
         column "Actions" do |product|
-          div class: "actions" do
-            span link_to("View Details", admin_product_path(product))
-            if current_user.owner? || current_user.seller?
-              span " | "
-              span link_to("Edit", edit_admin_product_path(product))
-            end
+          if current_user.owner? || current_user.seller?
+            links = []
+            links << link_to("Edit", edit_admin_product_path(product))
+            links << link_to("Delete", admin_product_path(product), method: :delete, data: { confirm: "Are you sure?" })
+            safe_join(links, " | ")
           end
         end
       end
     end
   end
-
   action_item :new_product, only: :show do
     if current_user.owner? || current_user.seller?
       link_to "Add Product", new_admin_product_path(store_id: resource.id)

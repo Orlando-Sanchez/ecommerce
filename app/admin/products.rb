@@ -52,7 +52,7 @@ ActiveAdmin.register Product do
       @product = Product.find(params[:id])
       authorize @product
       @product.destroy
-      redirect_to admin_products_path, notice: "Product deleted successfully."
+      redirect_to admin_store_path(@product.store), notice: "Product deleted successfully."
     end
   end
 
@@ -86,7 +86,7 @@ ActiveAdmin.register Product do
 
     panel "" do
       div do
-        link_to "Back to Products", admin_products_path, class: "button"
+        link_to "Back to Store", admin_store_path(resource.store), class: "button" if resource.store
       end
     end
   end
