@@ -3,6 +3,7 @@ class Store < ApplicationRecord
 
   has_many :store_assignments, dependent: :destroy
   has_many :sellers, through: :store_assignments, source: :user
+  has_many :products, dependent: :destroy
 
   validates :name, presence: true
   validates :description, presence: true

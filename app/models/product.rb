@@ -8,5 +8,16 @@ class Product < ApplicationRecord
   validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
   validates :status, presence: true
 
-  enum :status, { active: 0, inactive: 1 }
+  enum :status, { available: 0, out_of_stock: 1, discontinued: 2, unavailable: 3 }
+
+  STATUS_LABELS = {
+    "Available" => "Available",
+    "Out_of_stock" => "Out of stock",
+    "Discontinued" => "Discontinued",
+    "Unavailable" => "Unavailable"
+  }.freeze
+
+  def readable_status
+    STATUS_LABELS[status]
+  end
 end

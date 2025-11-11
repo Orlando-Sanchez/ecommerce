@@ -1,5 +1,9 @@
 ActiveAdmin.register Store do
+  menu label: "Stores", priority: 3
+
   actions :all, except: [:destroy]
+
+  config.filters = false
 
   controller do
     include Pundit::Authorization
@@ -92,6 +96,31 @@ ActiveAdmin.register Store do
     attributes_table do
       row :name
       row :description
+    end
+
+    panel "Products" do
+      table_for store.products do
+        column :name
+        column :price
+        column :quantity
+        column :status
+        column :description
+        column "Actions" do |product|
+          div class: "actions" do
+            span link_to("View Details", admin_product_path(product))
+            if current_user.owner? || current_user.seller?
+              span " | "
+              span link_to("Edit", edit_admin_product_path(product))
+            end
+          end
+        end
+      end
+    end
+  end
+
+  action_item :new_product, only: :show do
+    if current_user.owner? || current_user.seller?
+      link_to "Add Product", new_admin_product_path(store_id: resource.id)
     end
   end
 end
