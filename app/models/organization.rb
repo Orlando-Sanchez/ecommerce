@@ -1,5 +1,6 @@
 class Organization < ApplicationRecord
   has_many :users
+  has_many :stores
   validates :name, presence: true
   validates :description, presence: true
 

@@ -1,0 +1,12 @@
+<%= semantic_form_for user, url: create_invitation_admin_users_path, builder: ActiveAdmin::FormBuilder do |f| %>
+  <%= f.inputs "" do %>
+    <%= f.input :email, label: "Seller Email" %>
+    <%= f.input :store_ids,
+                as: :check_boxes,
+                collection: current_user.organization.stores,
+                label: "Assign Stores" %>
+  <% end %>
+  <%= f.actions do %>
+    <%= f.action :submit, label: "Send Invitation" %>
+  <% end %>
+<% end %>
