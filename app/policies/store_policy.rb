@@ -25,7 +25,7 @@ class StorePolicy < ApplicationPolicy
     false
   end
 
-  class Scope < Scope
+class Scope < ApplicationPolicy::Scope
     def resolve
       if user.owner? && user.organization.present?
         scope.where(organization: user.organization)

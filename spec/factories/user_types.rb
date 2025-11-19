@@ -6,8 +6,8 @@ FactoryBot.define do
       name { "Seller" }
     end
 
-    trait :buyer do
-      name { "Buyer" }
+    trait :customer do
+      name { "Customer" }
     end
   end
 end

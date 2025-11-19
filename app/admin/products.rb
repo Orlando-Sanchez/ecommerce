@@ -15,16 +15,20 @@ ActiveAdmin.register Product do
       super
     end
 
-    def create
-      @product = Product.new(permitted_params[:product])
-      authorize @product
+  def create
+    @product = Product.new(permitted_params[:product])
+    authorize @product
 
-      if @product.save
-        redirect_to admin_store_path(@product.store), notice: "Product created successfully."       
-      else
-        render :new
-      end
+    if current_user.organization.nil?
+      @product.user = current_user
     end
+
+    if @product.save
+      redirect_to admin_root_path(@product.store), notice: "Product created successfully."
+    else
+      render :new
+    end
+  end
 
     def edit
       @product = Product.find(params[:id])
@@ -62,10 +66,10 @@ ActiveAdmin.register Product do
       f.input :price
       f.input :quantity
 
-      f.input :status, as: :select,
-              collection: Product::STATUS_LABELS.map { |key, label| [label, key] },
+      f.input :status,
+              as: :select,
+              collection: Product.statuses.keys.map { |key| [key.humanize, key] },
               include_blank: "Select a status"
-
       f.input :description
       f.input :store_id, as: :hidden, input_html: { value: f.object.store_id }
     end

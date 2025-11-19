@@ -1,5 +1,5 @@
 ActiveAdmin.register Store do
-  menu label: "Stores", priority: 3
+  menu label: "Stores", priority: 3, if: proc { current_user.organization.present? }
 
   actions :all, except: [:destroy]
 
@@ -12,14 +12,14 @@ ActiveAdmin.register Store do
       policy_scope(super).includes(:organization)
     end
 
-    def index
-      if current_user.organization.nil?
-        redirect_to admin_root_path, alert: "There are no stores yet, please create your organization first."
-        return
-      end
-
-      super
+  def index
+    if current_user.owner? && current_user.organization.nil?
+      redirect_to admin_root_path, alert: "There are no stores yet, please create your organization first."
+      return
     end
+
+    super
+  end
 
     def new
       if current_user.owner? && current_user.organization.nil?

@@ -5,6 +5,9 @@ RSpec.describe Store, type: :model do
 
   describe 'associations' do
     it { should belong_to(:organization) }
+    it { should have_many(:store_assignments).dependent(:destroy) }
+    it { should have_many(:sellers).with_through(:store_assignments).source(:user) }
+    it { should have_many(:products).dependent(:destroy) }
   end
 
   describe 'validations' do

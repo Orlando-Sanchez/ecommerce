@@ -1,6 +1,7 @@
 class Product < ApplicationRecord
   has_and_belongs_to_many :categories
-  belongs_to :store
+  belongs_to :store, optional: true
+  belongs_to :user, optional: true
 
   validates :name, presence: true
   validates :description, presence: true

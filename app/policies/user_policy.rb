@@ -1,5 +1,5 @@
 class UserPolicy < ApplicationPolicy
-  class Scope < Scope
+  class Scope < ApplicationPolicy::Scope
     def resolve
       if user.owner?
         scope.joins(:user_types).where(user_types: { name: "Seller" }, organization_id: user.organization_id)

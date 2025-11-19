@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 ActiveAdmin.register_page "Dashboard" do
-  menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
+  menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }, if: proc { current_user.seller? && current_user.organization.nil? || current_user.owner? }
 
   content title: proc { I18n.t("active_admin.dashboard") } do
     if current_user.owner? && current_user.organization.nil?
@@ -10,32 +10,42 @@ ActiveAdmin.register_page "Dashboard" do
           link_to "Create Your Organization", new_admin_organization_path, class: "button"
         end
       end
-    else
-      div class: "blank_slate_container", id: "dashboard_default_message" do
-        span class: "blank_slate" do
-          span I18n.t("active_admin.dashboard_welcome.welcome")
-          small I18n.t("active_admin.dashboard_welcome.call_to_action")
+    end
+
+    if current_user.seller? && current_user.organization.nil?
+      panel "Your Products" do
+        div style: "margin-bottom: 10px;" do
+          span link_to("Create New Product", new_admin_product_path, class: "button")
+        end
+
+        if current_user.products.any?
+          table_for current_user.products do
+            column :name
+            column :price
+            column :quantity
+            column :status
+            column :created_at
+            column "Actions" do |product|
+              links = []
+              links << link_to("Edit", edit_admin_product_path(product))
+              links << link_to("Delete", admin_product_path(product),
+                               method: :delete,
+                               data: { confirm: "Are you sure you want to delete this product?" })
+              safe_join(links, " | ")
+            end
+          end
+        else
+          para "You don't have any products yet."
         end
       end
     end
-    # Here is an example of a simple dashboard with columns and panels.
-    #
-    # columns do
-    #   column do
-    #     panel "Recent Posts" do
-    #       ul do
-    #         Post.recent(5).map do |post|
-    #           li link_to(post.title, admin_post_path(post))
-    #         end
-    #       end
-    #     end
-    #   end
+    if (current_user.owner? && current_user.organization.present?) ||
+      (current_user.seller? && current_user.organization.present?)
 
-    #   column do
-    #     panel "Info" do
-    #       para "Welcome to ActiveAdmin."
-    #     end
-    #   end
-    # end
-  end # content
+      panel "Welcome" do
+        para "Welcome back! You are logged in as a #{current_user.owner? ? 'Owner' : 'Seller'} in the organization #{current_user.organization.name}."
+      end
+
+    end
+  end
 end

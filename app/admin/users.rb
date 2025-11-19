@@ -37,10 +37,10 @@ ActiveAdmin.register User do
   filter :invitation_accepted_at, label: "Accepted invitation"
   filter :invitation_sent_at, label: "Invitation sent"
 
-  # ---------------- Index ----------------
   index do
     selectable_column
     id_column
+    column :fullname
     column :email
     column "Roles" do |user|
       user.user_types.pluck(:name).join(", ")
@@ -66,18 +66,15 @@ ActiveAdmin.register User do
     end
   end
 
-  # ---------------- Sidebar ----------------
   sidebar "Invite a Seller", only: :index do
     if current_user.owner? && current_user.organization.present?
       render partial: "admin/users/invite_seller_form", 
             locals: { user: User.new, stores: current_user.organization.stores }
     else
-      # Opcional: mostrar un mensaje cuando no hay organización
       span "You don't have an organization or stores yet."
     end
   end
 
-  # ---------------- Member Action: Resend Invitation ----------------
   member_action :resend_invitation, method: :post do
     user = User.find(params[:id])
     authorize_owner!
@@ -90,7 +87,6 @@ ActiveAdmin.register User do
     end
   end
 
-  # ---------------- Collection Action: Create Invitation ----------------
   collection_action :create_invitation, method: :post do
     authorize_owner!
 

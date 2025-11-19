@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_and_belongs_to_many :user_types
   has_many :store_assignments, dependent: :destroy
   has_many :stores, through: :store_assignments
+  has_many :products, dependent: :nullify
   
   validates :email, presence: true, uniqueness: { case_sensitive: false }
 
