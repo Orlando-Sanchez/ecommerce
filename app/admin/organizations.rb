@@ -1,21 +1,32 @@
 ActiveAdmin.register Organization do
   menu false
 
-  breadcrumb do
-    []
-  end
-
+  breadcrumb { [] }
   config.filters = false
-
   actions :all, except: [:destroy]
 
   controller do
     include Pundit::Authorization
-
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
+    before_action :redirect_if_already_has_org, only: [:new, :create]
+
     def user_not_authorized
-      redirect_to admin_root_path, alert: "You are not authorized to view this organization."
+      if current_user&.owner? && current_user.organization.present?
+        if %w[edit update].include?(action_name)
+          redirect_to edit_admin_organization_path(current_user.organization)
+        else
+          redirect_to admin_organization_path(current_user.organization)
+        end
+      else
+        redirect_to admin_root_path, alert: "You are not authorized to view this page."
+      end
+    end
+
+    def redirect_if_already_has_org
+      return unless current_user&.owner? && current_user.organization.present?
+
+      redirect_to edit_admin_organization_path(current_user.organization), notice: "You already belong to an organization."
     end
 
     def scoped_collection
@@ -25,15 +36,32 @@ ActiveAdmin.register Organization do
         super.none
       end
     end
+    
+    def index
+      unless current_user.owner? || current_user.seller?
+        redirect_to root_path, alert: "You are not authorized to view this page." and return
+      end
+
+      if current_user.owner?
+        if current_user.organization.present?
+          redirect_to admin_organization_path(current_user.organization)
+        else
+          redirect_to admin_root_path
+        end
+        return
+      end
+
+      if current_user.seller?
+        redirect_to admin_root_path, alert: "You are not authorized to view organizations." and return
+      end
+
+      super
+    end
 
     def new
-      authorize Organization
-      if current_user.organization.present?
-        redirect_to edit_admin_organization_path(current_user.organization),
-                    alert: "You already belong to an organization."
-      else
-        super
-      end
+      @organization = Organization.new
+      authorize @organization
+      super
     end
 
     def create
@@ -50,48 +78,24 @@ ActiveAdmin.register Organization do
     end
 
     def edit
-      @organization = Organization.find(params[:id])
-
-      if current_user.owner? && (@organization.id != current_user.organization_id)
-        if current_user.organization.present?
-          redirect_to edit_admin_organization_path(current_user.organization),
-                      alert: "You can only edit your own organization."
-        else
-          redirect_to admin_root_path,
-                      alert: "You are not associated with any organization yet."
-        end
-        return
-      end
+      @organization = Organization.find_by(id: params[:id])
+      return redirect_to(admin_root_path, alert: "Organization not found.") if @organization.nil?
 
       authorize @organization
       super
     end
 
     def update
-      @organization = Organization.find(params[:id])
-      if current_user.owner? && @organization.id != current_user.organization_id
-        redirect_to edit_admin_organization_path(current_user.organization),
-                    alert: "You can only edit your own organization."
-        return
-      end
+      @organization = Organization.find_by(id: params[:id])
+      return redirect_to(admin_root_path, alert: "Organization not found.") if @organization.nil?
+
       authorize @organization
       super
     end
 
     def show
-      @organization = Organization.find(params[:id])
-
-      if current_user.owner?
-        if @organization.id != current_user.organization_id
-          if current_user.organization.present?
-            redirect_to admin_organization_path(current_user.organization),
-                        alert: "You can only view your own organization."
-          else
-            redirect_to admin_root_path, alert: "You don't belong to any organization."
-          end
-          return
-        end
-      end
+      @organization = Organization.find_by(id: params[:id])
+      return redirect_to(admin_root_path, alert: "Organization not found.") if @organization.nil?
 
       authorize @organization
       super
@@ -119,6 +123,7 @@ ActiveAdmin.register Organization do
   end
 
   config.clear_action_items!
+
   action_item :new, only: :index do
     if current_user.owner? && current_user.organization.nil?
       link_to "Create organization", new_admin_organization_path

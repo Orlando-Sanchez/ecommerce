@@ -85,9 +85,6 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    annotate (2.6.5)
-      activerecord (>= 2.3.0)
-      rake (>= 0.8.7)
     arbre (1.7.0)
       activesupport (>= 3.0.0)
       ruby2_keywords (>= 0.0.2)
@@ -323,6 +320,11 @@ GEM
       nio4r (~> 2.0)
     pundit (2.5.2)
       activesupport (>= 3.0.0)
+    pundit-matchers (4.0.0)
+      rspec-core (~> 3.12)
+      rspec-expectations (~> 3.12)
+      rspec-mocks (~> 3.12)
+      rspec-support (~> 3.12)
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.2.1)
@@ -545,7 +547,6 @@ PLATFORMS
 DEPENDENCIES
   active_admin_theme
   activeadmin
-  annotate
   bootsnap
   brakeman
   bullet (~> 8.0.8)
@@ -562,6 +563,7 @@ DEPENDENCIES
   propshaft
   puma (>= 5.0)
   pundit
+  pundit-matchers
   rails (~> 8.0.3)
   rails_best_practices
   reek (~> 6.5.0)

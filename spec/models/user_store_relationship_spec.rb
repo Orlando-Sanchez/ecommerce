@@ -8,6 +8,6 @@ RSpec.describe "User - Store relationship", type: :model do
     create(:store_assignment, user: user, store: store)
 
     expect(user.stores).to include(store)
-    expect(store.users).to include(user)
+    expect(store.sellers).to include(user)
   end
 end

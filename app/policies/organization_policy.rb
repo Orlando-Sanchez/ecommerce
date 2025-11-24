@@ -3,8 +3,6 @@ class OrganizationPolicy < ApplicationPolicy
     def resolve
       if user&.owner? && user.organization.present?
         scope.where(id: user.organization_id)
-      elsif user.owner? || false
-        scope.none
       else
         scope.none
       end
@@ -17,9 +15,12 @@ class OrganizationPolicy < ApplicationPolicy
 
   def show?
     return false unless user&.owner?
-    return false if record.nil?
 
-    user.organization.nil? || record.id == user.organization_id
+    user.organization.present? && record.id == user.organization_id
+  end
+
+  def index?
+    user.present?
   end
 
   def edit?
