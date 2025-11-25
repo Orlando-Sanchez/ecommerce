@@ -26,4 +26,8 @@ class User < ApplicationRecord
   def owner?
     user_types.exists?(name: "Owner")
   end
+
+  def customer?
+    user_types.exists?(name: "Customer")
+  end
 end

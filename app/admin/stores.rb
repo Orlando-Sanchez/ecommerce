@@ -8,25 +8,19 @@ ActiveAdmin.register Store do
   controller do
     include Pundit::Authorization
 
+    rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+
+    before_action :check_access
+
     def scoped_collection
       policy_scope(super).includes(:organization)
     end
 
-  def index
-    if current_user.owner? && current_user.organization.nil?
-      redirect_to admin_root_path, alert: "There are no stores yet, please create your organization first."
-      return
+    def index
+      super
     end
 
-    super
-  end
-
     def new
-      if current_user.owner? && current_user.organization.nil?
-        redirect_to admin_root_path, alert: "You must belong to an organization before creating a store."
-        return
-      end
-
       @store = Store.new
       authorize @store
       super
@@ -45,13 +39,13 @@ ActiveAdmin.register Store do
     end
 
     def edit
-      @store = Store.find(params[:id])
+      @store = Store.find_by(id: params[:id])
       authorize @store
       super
     end
 
     def update
-      @store = Store.find(params[:id])
+      @store = Store.find_by(id: params[:id])
       authorize @store
 
       if @store.update(permitted_params[:store])
@@ -62,12 +56,40 @@ ActiveAdmin.register Store do
     end
 
     def show
-      @store = Store.find(params[:id])
+      @store = Store.find_by(id: params[:id])
       authorize @store
       super
     end
+
+    private
+
+    def check_access
+      user = current_user
+
+      if user.customer?
+        redirect_to root_path, alert: "You are not authorized to access this section."
+        return
+      end
+
+      if (user.owner? || user.seller?) && user.organization.nil?
+        redirect_to admin_root_path, alert: "You must belong to an organization to access stores."
+        return
+      end
+    end
+
+    def user_not_authorized(exception)
+      # If the current user is an owner who belongs to an organization,
+      # redirect them to the stores index for their org. For other users,
+      # redirect to admin root (Pundit message used for debugging/admins).
+      if current_user&.owner? && current_user.organization.present?
+        redirect_to admin_stores_path, alert: "You are not authorized to perform that action."
+      else
+        redirect_to admin_root_path, alert: exception.message
+      end
+    end
   end
 
+  # Solo owners pueden modificar atributos
   permit_params do
     if current_user.owner?
       [:name, :description]
@@ -108,6 +130,7 @@ ActiveAdmin.register Store do
         column :categories do |product|
           product.categories.pluck(:name).join(", ")
         end
+
         column "Actions" do |product|
           if current_user.owner? || current_user.seller?
             links = []
@@ -119,6 +142,7 @@ ActiveAdmin.register Store do
       end
     end
   end
+
   action_item :new_product, only: :show do
     if current_user.owner? || current_user.seller?
       link_to "Add Product", new_admin_product_path(store_id: resource.id)
