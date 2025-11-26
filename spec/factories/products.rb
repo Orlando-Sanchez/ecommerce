@@ -5,6 +5,6 @@ FactoryBot.define do
     description { Faker::Lorem.paragraph }
     quantity { 10 }
     price { 10.50 }
-    status { :active }
+    status { :available }
   end
 end

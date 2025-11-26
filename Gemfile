@@ -25,11 +25,15 @@ gem "reek", "~> 6.5.0"
 
 gem "activeadmin"
 
+gem "active_admin_theme"
+
 gem "pundit"
 
 gem "sprockets-rails"
 
 gem "sassc-rails"
+
+gem "devise_invitable", "~> 2.0", ">= 2.0.11"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
@@ -82,4 +86,5 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
   gem "shoulda-matchers", "~> 6.5.0"
+  gem "pundit-matchers"
 end

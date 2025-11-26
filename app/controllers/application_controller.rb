@@ -7,8 +7,4 @@ class ApplicationController < ActionController::Base
   # def user_not_authorized
   # flash[:alert] = "You don't have permission to access this section."
   # end
-
-  def access_denied(exception)
-    redirect_to root_path, alert: exception.message
-  end
 end

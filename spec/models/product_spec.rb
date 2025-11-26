@@ -4,7 +4,8 @@ RSpec.describe Product, type: :model do
   subject(:product) { build(:product) }
 
   describe 'associations' do
-    it { should belong_to(:store) }
+    it { should belong_to(:store).optional }
+    it { should belong_to(:user).optional }
     it { should have_and_belong_to_many(:categories) }
   end
 
@@ -21,7 +22,7 @@ RSpec.describe Product, type: :model do
   describe 'enum status' do
     it do
       should define_enum_for(:status)
-        .with_values(active: 0, inactive: 1)
+        .with_values(available: 0, out_of_stock: 1, discontinued: 2, unavailable: 3)
         .backed_by_column_of_type(:integer)
     end
   end
