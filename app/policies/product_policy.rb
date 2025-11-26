@@ -4,9 +4,13 @@ class ProductPolicy < ApplicationPolicy
       if user.owner?
         scope.joins(:store).where(stores: { organization_id: user.organization_id })
       elsif user.seller?
-        scope.left_outer_joins(:store)
-             .where("products.user_id = :user_id OR stores.id IN (:store_ids)",
-                    user_id: user.id, store_ids: user.stores.ids)
+        if user.organization.present?
+          scope.left_outer_joins(:store)
+               .where("products.user_id = :user_id OR stores.id IN (:store_ids)",
+                      user_id: user.id, store_ids: user.stores.ids)
+        else
+          scope.all
+        end
       else
         scope.none
       end
@@ -40,8 +44,6 @@ class ProductPolicy < ApplicationPolicy
   private
 
   def allowed_to_manage_product?
-    return true if user.admin?
-
     if user.owner?
       record.store.present? && record.store.organization_id == user.organization_id
     elsif user.seller?

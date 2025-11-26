@@ -86,7 +86,7 @@ RSpec.describe OrganizationPolicy do
 
   describe "permissions for destroy?" do
     it "never allows destroy" do
-      [owner_with_org, owner_without_org, other_user].each do |user|
+      [ owner_with_org, owner_without_org, other_user ].each do |user|
         record = user.organization || Organization.new
         policy = OrganizationPolicy.new(user, record)
         expect(policy).to forbid_action(:destroy)

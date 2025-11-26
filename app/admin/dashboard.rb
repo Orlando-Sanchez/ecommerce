@@ -18,15 +18,19 @@ ActiveAdmin.register_page "Dashboard" do
           span link_to("Create New Product", new_admin_product_path, class: "button")
         end
 
-        if current_user.products.any?
-          table_for current_user.products do
+        user_products = current_user.products.includes(:categories)
+        if user_products.any?
+          table_for user_products do
             column :name
             column :price
             column :quantity
             column :status
+            column :description
+            column("Categories") { |p| p.categories.map(&:name).join(", ") }
             column :created_at
             column "Actions" do |product|
               links = []
+              links << link_to("Details", admin_product_path(product))
               links << link_to("Edit", edit_admin_product_path(product))
               links << link_to("Delete", admin_product_path(product),
                                method: :delete,

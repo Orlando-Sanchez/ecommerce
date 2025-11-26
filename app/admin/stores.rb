@@ -1,7 +1,7 @@
 ActiveAdmin.register Store do
   menu label: "Stores", priority: 3, if: proc { current_user.organization.present? }
 
-  actions :all, except: [:destroy]
+  actions :all, except: [ :destroy ]
 
   config.filters = false
 
@@ -73,14 +73,11 @@ ActiveAdmin.register Store do
 
       if (user.owner? || user.seller?) && user.organization.nil?
         redirect_to admin_root_path, alert: "You must belong to an organization to access stores."
-        return
+        nil
       end
     end
 
     def user_not_authorized(exception)
-      # If the current user is an owner who belongs to an organization,
-      # redirect them to the stores index for their org. For other users,
-      # redirect to admin root (Pundit message used for debugging/admins).
       if current_user&.owner? && current_user.organization.present?
         redirect_to admin_stores_path, alert: "You are not authorized to perform that action."
       else
@@ -89,10 +86,9 @@ ActiveAdmin.register Store do
     end
   end
 
-  # Solo owners pueden modificar atributos
   permit_params do
     if current_user.owner?
-      [:name, :description]
+      [ :name, :description ]
     else
       []
     end
@@ -134,6 +130,7 @@ ActiveAdmin.register Store do
         column "Actions" do |product|
           if current_user.owner? || current_user.seller?
             links = []
+            links << link_to("Details", admin_product_path(product))
             links << link_to("Edit", edit_admin_product_path(product))
             links << link_to("Delete", admin_product_path(product), method: :delete, data: { confirm: "Are you sure?" })
             safe_join(links, " | ")

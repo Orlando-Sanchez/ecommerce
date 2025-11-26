@@ -8,7 +8,7 @@ RSpec.describe StorePolicy, type: :policy do
   let(:owner_no_org) { create(:user, :owner, organization: nil) }
 
   let(:seller)       { create(:user, :seller, organization: organization) }
-  let(:seller_no_org){ create(:user, :seller, organization: nil) }
+  let(:seller_no_org) { create(:user, :seller, organization: nil) }
 
   let(:customer)     { create(:user, :customer) }
 

@@ -13,6 +13,6 @@ class Store < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["organization", "store_assignments", "sellers"]
+    [ "organization", "store_assignments", "sellers" ]
   end
 end

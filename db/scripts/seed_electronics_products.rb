@@ -20,36 +20,36 @@ puts "✅ Created #{categories.count} categories."
 statuses = { available: 0, out_of_stock: 1, discontinued: 2, unavailable: 3 }
 
 brands = [
-  "QuantumX", "ZenTech", "AeroCore", "Hyperion", "PulseOne", "NovaLink", 
+  "QuantumX", "ZenTech", "AeroCore", "Hyperion", "PulseOne", "NovaLink",
   "OptiGear", "FusionLabs", "ChronoEdge", "Vertex"
 ]
 
 def generate_product_name(category_name, brands)
   brand = brands.sample
   model_number = "#{('A'..'Z').to_a.sample}#{rand(1..999)}"
-  suffix = ["Pro", "Lite", "Max", "Air", "Plus", "Edge", "X", "Ultra"].sample
+  suffix = [ "Pro", "Lite", "Max", "Air", "Plus", "Edge", "X", "Ultra" ].sample
 
   case category_name
   when "Smartphones"
-    "#{brand} #{['One', 'Vibe', 'Pulse', 'Nova', 'Flow', 'Edge'].sample} #{suffix}"
+    "#{brand} #{[ 'One', 'Vibe', 'Pulse', 'Nova', 'Flow', 'Edge' ].sample} #{suffix}"
   when "Laptops"
-    "#{brand} #{['Book', 'Pad', 'Note', 'Core', 'Flex'].sample} #{suffix}"
+    "#{brand} #{[ 'Book', 'Pad', 'Note', 'Core', 'Flex' ].sample} #{suffix}"
   when "Tablets"
-    "#{brand} #{['Tab', 'Slate', 'NotePad'].sample} #{suffix}"
+    "#{brand} #{[ 'Tab', 'Slate', 'NotePad' ].sample} #{suffix}"
   when "Smartwatches"
-    "#{brand} #{['Watch', 'Time', 'Chrono', 'Pulse'].sample} #{suffix}"
+    "#{brand} #{[ 'Watch', 'Time', 'Chrono', 'Pulse' ].sample} #{suffix}"
   when "Headphones"
-    "#{brand} #{['Sound', 'Beat', 'Tone', 'Audio'].sample} #{suffix}"
+    "#{brand} #{[ 'Sound', 'Beat', 'Tone', 'Audio' ].sample} #{suffix}"
   when "Cameras"
-    "#{brand} #{['Vision', 'Capture', 'Lens', 'Shot'].sample} #{suffix}"
+    "#{brand} #{[ 'Vision', 'Capture', 'Lens', 'Shot' ].sample} #{suffix}"
   when "Drones"
-    "#{brand} #{['Flyer', 'Hawk', 'Falcon', 'Air', 'Scout'].sample} #{suffix}"
+    "#{brand} #{[ 'Flyer', 'Hawk', 'Falcon', 'Air', 'Scout' ].sample} #{suffix}"
   when "Gaming Consoles"
-    "#{brand} #{['Station', 'Play', 'Box', 'Core', 'Deck'].sample} #{suffix}"
+    "#{brand} #{[ 'Station', 'Play', 'Box', 'Core', 'Deck' ].sample} #{suffix}"
   when "Monitors"
-    "#{brand} #{['View', 'Screen', 'Vision', 'Display'].sample} #{suffix}"
+    "#{brand} #{[ 'View', 'Screen', 'Vision', 'Display' ].sample} #{suffix}"
   when "Accessories"
-    "#{brand} #{['Dock', 'Stand', 'Cable', 'Case', 'Charger'].sample} #{suffix}"
+    "#{brand} #{[ 'Dock', 'Stand', 'Cable', 'Case', 'Charger' ].sample} #{suffix}"
   else
     "#{brand} Device #{suffix}"
   end

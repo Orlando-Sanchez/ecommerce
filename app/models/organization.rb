@@ -5,7 +5,7 @@ class Organization < ApplicationRecord
   validates :description, presence: true
 
   def self.ransackable_associations(auth_object = nil)
-    ["users"]
+    [ "users" ]
   end
 
   def self.ransackable_attributes(auth_object = nil)

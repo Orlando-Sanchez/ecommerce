@@ -7,6 +7,6 @@ class StoreAssignment < ApplicationRecord
   end
 
   def self.ransackable_associations(auth_object = nil)
-    ["user", "store"]
+    [ "user", "store" ]
   end
 end

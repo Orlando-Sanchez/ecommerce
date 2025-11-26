@@ -3,13 +3,13 @@ ActiveAdmin.register Organization do
 
   breadcrumb { [] }
   config.filters = false
-  actions :all, except: [:destroy]
+  actions :all, except: [ :destroy ]
 
   controller do
     include Pundit::Authorization
     rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-    before_action :redirect_if_already_has_org, only: [:new, :create]
+    before_action :redirect_if_already_has_org, only: [ :new, :create ]
 
     def user_not_authorized
       if current_user&.owner? && current_user.organization.present?
@@ -36,7 +36,7 @@ ActiveAdmin.register Organization do
         super.none
       end
     end
-    
+
     def index
       unless current_user.owner? || current_user.seller?
         redirect_to root_path, alert: "You are not authorized to view this page." and return
